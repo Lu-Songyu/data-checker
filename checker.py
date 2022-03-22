@@ -1,3 +1,4 @@
+from email.quoprimime import body_check
 import smtpd
 import smtplib
 from credential import credentials
@@ -5,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common import keys
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from twilio.rest import Client
 
 import time
 import sys
@@ -21,6 +23,10 @@ driver.find_element(By.ID, 'login-form_0').click()
 text = driver.find_element(By.XPATH, '//*[@id="usage-summary-css"]/div[3]/div/div[3]/div[2]/div[2]/div[2]/p/strong')
 toSend = text.text
 # login gmail
-driver.get('https://www.gmail.com/')
-river.find_element(By.XPATH, '//*[@id="identifierId"]').send_keys('songyulu99@gmail.com')
-driver.find_element(By.XPATH, 'login-pin-pin-number').send_keys('LsyATT990914')
+client = Client(credentials.get('twilio_sid'),credentials.get('twilio_token'))
+body = "Date Usage" + toSend
+message = client.messages.create(
+    body=body,
+    from_=credentials.get('mynumber'),
+    to=credentials.get('toNumber')
+)
