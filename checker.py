@@ -1,6 +1,4 @@
 from email.quoprimime import body_check
-import smtpd
-import smtplib
 from credential import credentials
 from selenium import webdriver
 from selenium.webdriver.common import keys
@@ -9,8 +7,6 @@ from selenium.webdriver.common.by import By
 from twilio.rest import Client
 
 import time
-import sys
-
 
 driver = webdriver.Chrome()
 driver.get('https://www.paygonline.com/')
@@ -22,9 +18,12 @@ driver.find_element(By.ID, 'login-form_0').click()
 # find data usage
 text = driver.find_element(By.XPATH, '//*[@id="usage-summary-css"]/div[3]/div/div[3]/div[2]/div[2]/div[2]/p/strong')
 toSend = text.text
+time.sleep(2)
 # login gmail
 client = Client(credentials.get('twilio_sid'),credentials.get('twilio_token'))
-body = "Date Usage" + toSend
+
+body = "Date Usage: " + toSend + " left"
+
 message = client.messages.create(
     body=body,
     from_=credentials.get('mynumber'),
